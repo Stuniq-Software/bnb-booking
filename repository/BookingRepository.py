@@ -1,6 +1,7 @@
 from util import Database, RedisSession, create_payment_id, calculate_nights, calculate_total_price
 from typing import Optional, Tuple
 from datetime import datetime
+from uuid import uuid4
 
 
 class BookingRepository:
@@ -27,18 +28,21 @@ class BookingRepository:
     ) -> Tuple[bool, Optional[dict]]:
         nights = calculate_nights(checkin_date, checkout_date)
         total_price = calculate_total_price(stay_id, nights)
+        booking_id = str(uuid4())
         payment_id = create_payment_id(
             total_price,
             "INR",
-            f"Booking for stay {stay_id}\nFrom {checkin_date} to {checkout_date}"
+            f"Booking for stay {stay_id}\nFrom {checkin_date} to {checkout_date}",
+            booking_id
         )
-        query = ("INSERT INTO bookings (user_id, stay_id, checkin_date, checkout_date, nights, total_amount, "
-                 "payment_id) VALUES (%s, %s, %s, %s, %s, %s, %s)")
+        query = ("INSERT INTO bookings (id, user_id, stay_id, checkin_date, checkout_date, nights, total_amount, "
+                 "payment_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)")
 
         success, err = self.db_session.execute_query(query, (
-            user_id, stay_id, checkin_date, checkout_date, nights, total_price, payment_id), True)
+            booking_id, user_id, stay_id, checkin_date, checkout_date, nights, total_price, payment_id), True)
         if success:
             return success, {
+                "id": booking_id,
                 "user_id": user_id,
                 "stay_id": stay_id,
                 "payment_id": payment_id,
