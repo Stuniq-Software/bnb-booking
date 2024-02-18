@@ -11,7 +11,8 @@ def create_payment_id(amount: float, currency: str, description: str, booking_id
         currency=currency,
         description=description,
         metadata={"booking_id", booking_id},
-        automatic_payment_methods={"enabled": True}
+        payment_method_types=["card"],
+        confirm=True
     )
     return intent['id']
 
