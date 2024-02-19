@@ -23,8 +23,8 @@ class BookingRepository:
             self,
             user_id: str,
             stay_id: str,
-            checkin_date: datetime.date,
-            checkout_date: datetime.date
+            checkin_date: datetime,
+            checkout_date: datetime
     ) -> Tuple[bool, Optional[dict]]:
         nights = calculate_nights(checkin_date, checkout_date)
         total_price = calculate_total_price(stay_id, nights)
@@ -35,7 +35,8 @@ class BookingRepository:
             f"Booking for stay {stay_id}\nFrom {checkin_date} to {checkout_date}",
             booking_id,
             stay_id,
-            user_id
+            user_id,
+            checkout_date
         )
         query = ("INSERT INTO bookings (id, user_id, stay_id, checkin_date, checkout_date, nights, total_amount, "
                  "payment_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)")
