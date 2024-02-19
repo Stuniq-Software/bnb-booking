@@ -33,7 +33,9 @@ class BookingRepository:
             total_price,
             "INR",
             f"Booking for stay {stay_id}\nFrom {checkin_date} to {checkout_date}",
-            booking_id
+            booking_id,
+            stay_id,
+            user_id
         )
         query = ("INSERT INTO bookings (id, user_id, stay_id, checkin_date, checkout_date, nights, total_amount, "
                  "payment_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)")
