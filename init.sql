@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS bookings (
     total_amount numeric(10, 2) NOT NULL,
     payment_id text,
     is_paid boolean DEFAULT false,
-    status text NOT NULL DEFAULT 'confirmed',
+    status text NOT NULL DEFAULT 'booked',
     created_at timestamp with time zone DEFAULT now(),
     updated_at timestamp with time zone DEFAULT now()
 );
