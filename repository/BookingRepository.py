@@ -1,6 +1,7 @@
 from util import Database, RedisSession, create_payment_id, calculate_nights, calculate_total_price
 from typing import Optional, Tuple
 from datetime import datetime
+from dtypes import Booking
 from uuid import uuid4
 
 
@@ -15,8 +16,11 @@ class BookingRepository:
     def get_booking(self, booking_id: str) -> Tuple[bool, Optional[dict]]:
         query = "SELECT * FROM bookings WHERE id = %s"
         success, err = self.db_session.execute_query(query, (booking_id,))
+        data = self.db_session.get_cursor().fetchone()
+        if len(data) == 0:
+            return False, "Booking not Found"
         if success:
-            return success, self.db_session.get_cursor().fetchone()
+            return success, Booking.from_tuple(data).to_dict()
         return success, err
 
     def create_booking(
